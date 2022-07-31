@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+    - main
+    - feature/*
+    - dependabot/*
+
+pr:
+  branches:
+    include:
+    - main
+    - feature/*
+    - dependabot/*
+
+schedules:
+  - cron: "0 3 * * 0"
+    displayName: Weekly Build
+    branches:
+      include:
+      - main
+
+pool: 'Dedicated'
+
+- stage: ValidateBicep
+  jobs: 
+  - job: LintCode
+    displayName: Lint Code
+    steps:
+      - script: |
+          $files = Get-ChildItem 'modules/*.bicep'
+
+          foreach ($file in $files) {
+            az bicep build --file $file.FullName
+          }
+        name: LintBicepCode
+        displayName: Run Bicep Linter
