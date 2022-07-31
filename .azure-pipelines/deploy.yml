@@ -39,7 +39,7 @@ stages:
               $fileShortName = $file.Name
 
               $publishName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
-              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$publishName:V$(Build.BuildId)"
+              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$($publishName):V$(Build.BuildId)"
 
               Write-Host "Publish target: '$publishTarget'"
 
