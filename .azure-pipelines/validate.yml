@@ -30,7 +30,7 @@ stages:
       - task: AzureCLI@2
         name: LintBicepCode
         displayName: Run Bicep Linter
-        input:
+        inputs:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
