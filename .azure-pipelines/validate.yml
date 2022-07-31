@@ -35,7 +35,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            $files = Get-ChildItem 'modules/*.bicep'
+            $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
 
             foreach ($file in $files) {
               az bicep build --file $file.FullName --stdout
