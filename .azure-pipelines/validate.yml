@@ -38,5 +38,6 @@ stages:
             $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
 
             foreach ($file in $files) {
+              Write-Host "Running `az bicep build` for '$($file.FullName)'"
               az bicep build --file $file.FullName --stdout
             }
