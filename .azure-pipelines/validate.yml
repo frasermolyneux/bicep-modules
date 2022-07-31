@@ -27,11 +27,15 @@ stages:
   - job: LintCode
     displayName: Lint Code
     steps:
-      - script: |
-          $files = Get-ChildItem 'modules/*.bicep'
-
-          foreach ($file in $files) {
-            az bicep build --file $file.FullName
-          }
+      - task: AzureCLI@2
         name: LintBicepCode
         displayName: Run Bicep Linter
+        input:
+          scriptType: 'pscore'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            $files = Get-ChildItem 'modules/*.bicep'
+
+            foreach ($file in $files) {
+              az bicep build --file $file.FullName
+            }
