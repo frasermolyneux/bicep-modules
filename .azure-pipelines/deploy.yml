@@ -1,8 +1,6 @@
 trigger: none
 pr: none
 
-pool: 'Dedicated'
-
 resources:
   pipelines:
   - pipeline: bicep-modules.Validate
