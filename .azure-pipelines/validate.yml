@@ -38,5 +38,5 @@ stages:
             $files = Get-ChildItem 'modules/*.bicep'
 
             foreach ($file in $files) {
-              az bicep build --file $file.FullName
+              az bicep build --file $file.FullName --stdout
             }
