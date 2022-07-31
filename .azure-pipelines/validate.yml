@@ -31,6 +31,7 @@ stages:
         name: LintBicepCode
         displayName: Run Bicep Linter
         inputs:
+          azureSubscription: 'spn-ado-Personal-Public-bicep-modules'
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
