@@ -39,7 +39,8 @@ stages:
               $fileShortName = $file.Name
 
               $publishName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
-              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$($publishName):V$(Build.BuildId)"
+              $dateForVersion = (Get-Date).ToString("yyyy.MM.dd")
+              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$($publishName):V$dateForVersion.$(Build.BuildId)"
 
               Write-Host "Publish target: '$publishTarget'"
 
