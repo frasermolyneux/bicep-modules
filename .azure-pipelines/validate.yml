@@ -21,6 +21,7 @@ schedules:
 
 pool: 'Dedicated'
 
+stages:
 - stage: ValidateBicep
   jobs: 
   - job: LintCode
