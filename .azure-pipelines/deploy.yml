@@ -22,12 +22,10 @@ pool: 'Dedicated'
 stages:
 - stage: ValidateBicep
   jobs: 
-  - job: LintCode
-    displayName: Lint Code
+  - job: PublishModules
+    displayName: Publish Modules
     steps:
       - task: AzureCLI@2
-        name: LintBicepCode
-        displayName: Run Bicep Linter
         inputs:
           azureSubscription: 'spn-ado-Personal-Public-bicep-modules'
           scriptType: 'pscore'
@@ -36,10 +34,14 @@ stages:
             $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
 
             foreach ($file in $files) {
-              Write-Host "Publishing module '$($file.Name)'"
+              Write-Host "Publishing module '$($file.FullName)'"
 
               $fileShortName = $file.Name
 
               $publishName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
-              az bicep publish --file $file.FullName --target "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$publishName:V$(Build.BuildId)"
+              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$publishName:V$(Build.BuildId)"
+
+              Write-Host "Publish target: '$publishTarget'"
+
+              az bicep publish --file $file.FullName --target $publishTarget
             }
