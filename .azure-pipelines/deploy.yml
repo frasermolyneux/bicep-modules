@@ -1,16 +1,16 @@
-trigger:
-  branches:
-    include:
-    - main
-    - feature/*
-    - dependabot/*
+trigger: none
+pr: none
 
-pr:
-  branches:
-    include:
-    - main
-    - feature/*
-    - dependabot/*
+pool: 'Dedicated'
+
+resources:
+  pipelines:
+  - pipeline: bicep-modules.Validate
+    source: bicep-modules.Validate
+    trigger:
+      branches:
+        include:
+        - main
 
 schedules:
   - cron: "0 3 * * 0"
@@ -38,6 +38,10 @@ stages:
             $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
 
             foreach ($file in $files) {
-              Write-Host "Running az bicep build for '$($file.FullName)'"
-              az bicep build --file $file.FullName --stdout
+              Write-Host "Publishing module '$($file.Name)'"
+
+              $fileShortName = $file.Name
+
+              $publishName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
+              az bicep publish --file $file.FullName --target "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$publishName:V$(Build.BuildId)"
             }
