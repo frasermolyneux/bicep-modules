@@ -28,6 +28,7 @@ stages:
     parameters: 
       jobName: 'BicepLinter'
       azureSubscription: 'spn-ado-Personal-Public-devtest'
+      bicepDirectory: '$(Build.sourcesDirectory)/modules'
       
 - stage: Deploy
   jobs: 
