@@ -1,26 +1,36 @@
-trigger: none
-pr: none
+trigger:
+  branches:
+    include:
+    - '*'
+    exclude:
+    - 'docs/*'
 
-resources:
-  pipelines:
-  - pipeline: bicep-modules.Validate
-    source: bicep-modules.Validate
-    trigger:
-      branches:
-        include:
-        - main
-
-schedules:
-  - cron: "0 3 * * 0"
-    displayName: Weekly Build
-    branches:
-      include:
-      - main
+pr:
+  branches:
+    include:
+    - '*'
+    exclude:
+    - 'docs/*'
 
 pool: 'Dedicated'
 
+resources:
+  repositories:
+    - repository: ado-pipeline-templates
+      type: github
+      name: frasermolyneux/ado-pipeline-templates
+      endpoint: github.com_frasermolyneux
+
+stages: 
+- stage: Build
+  jobs:
+  - template: jobs/bicep-lint-code.yml@ado-pipeline-templates
+    parameters: 
+      jobName: 'BicepLinter'
+      azureSubscription: 'spn-ado-Personal-Public-devtest'
+
 stages:
-- stage: ValidateBicep
+- stage: Deploy
   jobs: 
   - job: PublishModules
     displayName: Publish Modules
