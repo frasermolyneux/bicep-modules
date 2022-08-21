@@ -21,11 +21,22 @@ The Azure Container Registry is deployed by the `platform-strategic-services` pr
 
 The included Bicep modules have been extracted out of a series of projects that I have worked on through my learning and development. They are largely focused on Azure Integration Services such as API Management, Azure Functions, App Services and Key Vault.
 
+### Versioning
+
+Each module within the solution has a metadata `.json` file that is within the `metadata` folder. Currently this contains a JSON payload that simply has a version property - there is the future potential to add additional metadata here such as tagging, author and description. For each module file there *must* be a metadata file and for a new version to be pushed the metadata file must be updated.
+
+If the build is running from any branch other than `main` then a *-preview* suffix is added to the tag.
+
 ---
 
 ## Pipelines
 
 The `one-pipeline` is within the `.azure-pipelines` folder and output is visible on the [frasermolyneux/Personal-Public](https://dev.azure.com/frasermolyneux/Personal-Public/_build?definitionId=175) Azure DevOps project.
+
+The [Publish-BicepModuleToAcr.ps1](/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1) script is executed per module and uses the following rules to publish:
+
+* Will only push a new version if the tag does not already exist
+* When pushing a new version will also push that version using the 'latest' tag
 
 ---
 
