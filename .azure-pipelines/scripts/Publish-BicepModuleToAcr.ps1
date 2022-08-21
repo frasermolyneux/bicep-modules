@@ -25,7 +25,13 @@ $moduleMetadata = Get-Content $metadataFilePath | ConvertFrom-Json
 
 $tagsToPushTo = @()
 
-$majorMinorRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).$($moduleMetadata.version.revision)"
+if ($previewRelease) {
+    $majorMinorRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).$($moduleMetadata.version.revision)-preview"
+}
+else {
+    $majorMinorRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).$($moduleMetadata.version.revision)"
+}
+
 $majorMinorXRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).x"
 
 $repositories = az acr repository list --name $acrName | ConvertFrom-Json
@@ -45,7 +51,7 @@ else {
     }
     else {
         $tagsToPushTo += $majorMinorRevisionVersion
-        
+
         if (!$previewRelease) {
             $tagsToPushTo += $majorMinorXRevisionVersion
             $tagsToPushTo += "latest"
