@@ -23,9 +23,11 @@ The included Bicep modules have been extracted out of a series of projects that 
 
 ### Versioning
 
-Each module within the solution has a metadata `.json` file that is within the `metadata` folder. Currently this contains a JSON payload that simply has a version property - there is the future potential to add additional metadata here such as tagging, author and description. For each module file there *must* be a metadata file and for a new version to be pushed the metadata file must be updated.
+Each module within the solution has a metadata `.json` file that is within the `metadata` folder. Currently this contains a JSON payload that simply has a version object containing `major`, `minor` and `revision` properties - there is the future potential to add additional metadata here such as tagging, author and description. For each module file there *must* be a metadata file and for a new version to be pushed the metadata file must be updated.
 
-If the build is running from any branch other than `main` then a *-preview* suffix is added to the tag.
+If the build is running from any branch other than `main` then a *-preview* suffix is added to the tag and the `.x` and `latest` tags will not be pushed.
+
+As such, for a new version to be pushed the metadata file is required to be updated. There is no automation at present as it is not warranted.
 
 ---
 
@@ -35,8 +37,8 @@ The `one-pipeline` is within the `.azure-pipelines` folder and output is visible
 
 The [Publish-BicepModuleToAcr.ps1](/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1) script is executed per module and uses the following rules to publish:
 
-* Will only push a new version if the tag does not already exist
-* When pushing a new version will also push that version using the 'latest' tag
+* Will only push a new version if the `major.minor.revision` tag does not already exist
+* When pushing a new version will also push that version using the a `.x` and `latest` tag
 
 ---
 
