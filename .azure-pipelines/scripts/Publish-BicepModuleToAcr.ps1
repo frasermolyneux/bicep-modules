@@ -36,7 +36,10 @@ $repositories = az acr repository list --name $acrName | ConvertFrom-Json
 if (!$repositories.Contains($acrRepository)) {
     Write-Host "Publishing new module to: 'br:$acrName.azurecr.io/${acrRepository}' with tags: '$moduleTag, latest'"
     az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$moduleTag"
-    az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
+
+    if ($previewRelease -eq $false) {
+        az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
+    }
 }
 else {
     $moduleTags = az acr repository show-tags --name $acrName --repository $acrRepository | ConvertFrom-Json
@@ -47,6 +50,9 @@ else {
     else {
         Write-Host "Publishing module to: 'br:$acrName.azurecr.io/${acrRepository}' with tags: '$moduleTag, latest'"
         az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$moduleTag"
-        az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
+
+        if ($previewRelease -eq $false) {
+            az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
+        }
     }
 }
