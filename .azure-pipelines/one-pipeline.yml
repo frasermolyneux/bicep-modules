@@ -48,7 +48,7 @@ stages:
             if ($sourceBranch -eq 'refs/heads/main') { $previewRelease = $false }
 
             # Get all of the *.bicep files in the modules folder
-            $files = Get-ChildItem '${env:BUILD_SOURCESDIRECTORY}/modules/*.bicep'
+            $files = Get-ChildItem "${env:BUILD_SOURCESDIRECTORY}/modules/*.bicep"
 
             # Loop through all of the bicep modules and call the publish script
             foreach ($file in $files) {
