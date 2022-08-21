@@ -41,18 +41,22 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
+            # Set the release to be a preview release unless the branch is main
+            $previewRelease = $true
+            $sourceBranchName = $(Build.SourceBranchName)
+            if ($sourceBranchName -eq 'main') { $previewRelease = $false }
+
+            # Get all of the *.bicep files in the modules folder
             $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
 
+            # Loop through all of the bicep modules and call the publish script
             foreach ($file in $files) {
-              Write-Host "Publishing module '$($file.FullName)'"
+              $moduleName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
 
-              $fileShortName = $file.Name
-
-              $publishName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
-              $dateForVersion = (Get-Date).ToString("yyyy.MM.dd")
-              $publishTarget = "br:acrmxplatformprduksouth.azurecr.io/bicep/modules/$($publishName):V$dateForVersion.$(Build.BuildId)"
-
-              Write-Host "Publish target: '$publishTarget'"
-
-              az bicep publish --file $file.FullName --target $publishTarget
+              . $(Build.sourcesDirectory)/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
+                -moduleName $moduleName `
+                -modulesRootPath $(Build.sourcesDirectory)/modules `
+                -metadataRootPath $(Build.sourcesDirectory)/metadata `
+                -acrName acrmxplatformprduksouth `
+                -previewRelease $previewRelease
             }
