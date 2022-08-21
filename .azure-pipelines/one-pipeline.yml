@@ -51,7 +51,7 @@ stages:
 
             # Loop through all of the bicep modules and call the publish script
             foreach ($file in $files) {
-              $moduleName = $($fileShortName.Substring(0, $fileShortName.length - 6)).toLower()
+              $moduleName = $($file.Name.Substring(0, $file.Name.Length - 6)).ToLower()
 
               . $(Build.sourcesDirectory)/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
                 -moduleName $moduleName `
