@@ -30,9 +30,12 @@ $majorMinorXRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetada
 
 $repositories = az acr repository list --name $acrName | ConvertFrom-Json
 if ($null -eq $repositories -or !$repositories.Contains($acrRepository)) {
-    $tagsToPushTo.Add($majorMinorRevisionVersion)
-    $tagsToPushTo.Add($majorMinorXRevisionVersion)
-    $tagsToPushTo.Add("latest")
+    $tagsToPushTo += $majorMinorRevisionVersion
+
+    if (!$previewRelease) {
+        $tagsToPushTo += $majorMinorXRevisionVersion
+        $tagsToPushTo += "latest"
+    }
 }
 else {
     $moduleTags = az acr repository show-tags --name $acrName --repository $acrRepository | ConvertFrom-Json
@@ -41,9 +44,12 @@ else {
         Write-Warning "There is already a published image with the tag '$majorMinorRevisionVersion'"
     }
     else {
-        $tagsToPushTo.Add($majorMinorRevisionVersion)
-        $tagsToPushTo.Add($majorMinorXRevisionVersion)
-        $tagsToPushTo.Add("latest")
+        $tagsToPushTo += $majorMinorRevisionVersion
+        
+        if (!$previewRelease) {
+            $tagsToPushTo += $majorMinorXRevisionVersion
+            $tagsToPushTo += "latest"
+        }
     }
 }
 
