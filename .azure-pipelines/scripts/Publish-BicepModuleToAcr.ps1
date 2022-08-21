@@ -20,6 +20,7 @@ if ((Test-Path $metadataFilePath) -eq $false) {
     exit
 }
 
+Write-Host "Using module file: '$moduleFilePath'"
 Write-Host "Using metadata file: '$metadataFilePath'"
 $moduleMetadata = Get-Content $metadataFilePath | ConvertFrom-Json
 
