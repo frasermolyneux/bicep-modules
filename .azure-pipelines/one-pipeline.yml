@@ -43,21 +43,21 @@ stages:
           inlineScript: |
             # Set the release to be a preview release unless the branch is main
             $previewRelease = $true
-            $sourceBranchName = "${env:BUILD_SOURCEBRANCHNAME}"
-            Write-Host "Branch name: '$sourceBranchName'"
-            if ($sourceBranchName -eq 'main') { $previewRelease = $false }
+            $sourceBranch = "${env:BUILD_SOURCEBRANCH}"
+            Write-Host "Branch name: '$sourceBranch'"
+            if ($sourceBranch -eq 'refs/heads/main') { $previewRelease = $false }
 
             # Get all of the *.bicep files in the modules folder
-            $files = Get-ChildItem '$(Build.sourcesDirectory)/modules/*.bicep'
+            $files = Get-ChildItem '${env:BUILD.SOURCESDIRECTORY}/modules/*.bicep'
 
             # Loop through all of the bicep modules and call the publish script
             foreach ($file in $files) {
               $moduleName = $($file.Name.Substring(0, $file.Name.Length - 6)).ToLower()
 
-              . $(Build.sourcesDirectory)/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
+              . ${env:BUILD.SOURCESDIRECTORY}/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
                 -moduleName $moduleName `
-                -modulesRootPath $(Build.sourcesDirectory)/modules `
-                -metadataRootPath $(Build.sourcesDirectory)/metadata `
+                -modulesRootPath ${env:BUILD.SOURCESDIRECTORY}/modules `
+                -metadataRootPath ${env:BUILD.SOURCESDIRECTORY}ry)/metadata `
                 -acrName acrmxplatformprduksouth `
                 -previewRelease $previewRelease
             }

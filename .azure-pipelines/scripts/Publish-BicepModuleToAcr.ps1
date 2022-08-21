@@ -34,10 +34,11 @@ Write-Host "Setting the module version tag to: '$moduleTag'"
 $repositories = az acr repository list --name $acrName | ConvertFrom-Json
 
 if (!$repositories.Contains($acrRepository)) {
-    Write-Host "Publishing new module to: 'br:$acrName.azurecr.io/${acrRepository}' with tags: '$moduleTag, latest'"
+    Write-Host "Publishing new module to: 'br:$acrName.azurecr.io/${acrRepository}' with tag: '$moduleTag'"
     az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$moduleTag"
 
     if ($previewRelease -eq $false) {
+        Write-Host "Publishing new module to: 'br:$acrName.azurecr.io/${acrRepository}' with tag: 'latest'"
         az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
     }
 }
@@ -48,10 +49,11 @@ else {
         Write-Warning "There is already a published image with the tag '$moduleTag'"
     }
     else {
-        Write-Host "Publishing module to: 'br:$acrName.azurecr.io/${acrRepository}' with tags: '$moduleTag, latest'"
+        Write-Host "Publishing module to: 'br:$acrName.azurecr.io/${acrRepository}' with tags: '$moduleTag'"
         az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$moduleTag"
 
         if ($previewRelease -eq $false) {
+            Write-Host "Publishing new module to: 'br:$acrName.azurecr.io/${acrRepository}' with tag: 'latest'"
             az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:latest"
         }
     }
