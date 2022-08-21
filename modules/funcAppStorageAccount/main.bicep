@@ -3,14 +3,10 @@ targetScope = 'resourceGroup'
 // Parameters
 param parLocation string
 param parEnvironment string
-param parWorkloadName string
-param parKeyVaultName string
-param parTags object
 
-// Existing Out-Of-Scope Resources
-resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' existing = {
-  name: parKeyVaultName
-}
+param parWorkloadName string
+
+param parTags object
 
 // Module Resources
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
