@@ -48,16 +48,16 @@ stages:
             if ($sourceBranch -eq 'refs/heads/main') { $previewRelease = $false }
 
             # Get all of the *.bicep files in the modules folder
-            $files = Get-ChildItem '${env:BUILD.SOURCESDIRECTORY}/modules/*.bicep'
+            $files = Get-ChildItem '${env:BUILD_SOURCESDIRECTORY}/modules/*.bicep'
 
             # Loop through all of the bicep modules and call the publish script
             foreach ($file in $files) {
               $moduleName = $($file.Name.Substring(0, $file.Name.Length - 6)).ToLower()
 
-              . ${env:BUILD.SOURCESDIRECTORY}/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
+              . ${env:BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
                 -moduleName $moduleName `
-                -modulesRootPath ${env:BUILD.SOURCESDIRECTORY}/modules `
-                -metadataRootPath ${env:BUILD.SOURCESDIRECTORY}/metadata `
+                -modulesRootPath ${env:BUILD_SOURCESDIRECTORY}/modules `
+                -metadataRootPath ${env:BUILD_SOURCESDIRECTORY}/metadata `
                 -acrName acrmxplatformprduksouth `
                 -previewRelease $previewRelease
             }
