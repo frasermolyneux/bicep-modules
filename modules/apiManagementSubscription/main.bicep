@@ -28,7 +28,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
   }
 }
 
-module keyVaultSecret 'keyVaultSecret.bicep' = {
+module keyVaultSecret './../keyVaultSecret/main.bicep' = {
   name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecret'
   scope: resourceGroup(parWorkloadSubscriptionId, parWorkloadResourceGroupName)
 
