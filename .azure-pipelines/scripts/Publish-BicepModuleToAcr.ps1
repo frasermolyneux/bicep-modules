@@ -33,6 +33,7 @@ else {
     $majorMinorRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).$($moduleMetadata.version.revision)"
 }
 
+$majorXVersion = "V$($moduleMetadata.version.major).x"
 $majorMinorXRevisionVersion = "V$($moduleMetadata.version.major).$($moduleMetadata.version.minor).x"
 
 $repositories = az acr repository list --name $acrName | ConvertFrom-Json
@@ -40,6 +41,7 @@ if ($null -eq $repositories -or !$repositories.Contains($acrRepository)) {
     $tagsToPushTo += $majorMinorRevisionVersion
 
     if (!$previewRelease) {
+        $tagsToPushTo += $majorXVersion
         $tagsToPushTo += $majorMinorXRevisionVersion
         $tagsToPushTo += "latest"
     }
@@ -54,6 +56,7 @@ else {
         $tagsToPushTo += $majorMinorRevisionVersion
 
         if (!$previewRelease) {
+            $tagsToPushTo += $majorXVersion
             $tagsToPushTo += $majorMinorXRevisionVersion
             $tagsToPushTo += "latest"
         }
