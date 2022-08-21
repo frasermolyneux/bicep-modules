@@ -34,7 +34,7 @@ Write-Host "Setting the module version tag to: '$moduleTag'"
 $publishModule = $false
 
 $repositories = az acr repository list --name $acrName | ConvertFrom-Json
-if (!$repositories.Contains($acrRepository)) {
+if ($null -eq $repositories -or !$repositories.Contains($acrRepository)) {
     $publishModule = $true
 }
 else {
