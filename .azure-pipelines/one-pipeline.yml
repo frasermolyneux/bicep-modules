@@ -44,6 +44,7 @@ stages:
             # Set the release to be a preview release unless the branch is main
             $previewRelease = $true
             $sourceBranchName = $(Build.SourceBranchName)
+            Write-Host "Branch name: '$sourceBranchName'"
             if ($sourceBranchName -eq 'main') { $previewRelease = $false }
 
             # Get all of the *.bicep files in the modules folder
