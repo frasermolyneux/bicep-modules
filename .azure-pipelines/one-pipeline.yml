@@ -43,7 +43,7 @@ stages:
           inlineScript: |
             # Set the release to be a preview release unless the branch is main
             $previewRelease = $true
-            $sourceBranchName = $(Build.SourceBranchName)
+            $sourceBranchName = ${env:BUILD_SOURCEBRANCHNAME}"
             Write-Host "Branch name: '$sourceBranchName'"
             if ($sourceBranchName -eq 'main') { $previewRelease = $false }
 
