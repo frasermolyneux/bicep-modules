@@ -57,7 +57,7 @@ stages:
               . ${env:BUILD.SOURCESDIRECTORY}/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
                 -moduleName $moduleName `
                 -modulesRootPath ${env:BUILD.SOURCESDIRECTORY}/modules `
-                -metadataRootPath ${env:BUILD.SOURCESDIRECTORY}ry)/metadata `
+                -metadataRootPath ${env:BUILD.SOURCESDIRECTORY}/metadata `
                 -acrName acrmxplatformprduksouth `
                 -previewRelease $previewRelease
             }
