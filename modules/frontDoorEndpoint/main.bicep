@@ -3,8 +3,11 @@ targetScope = 'resourceGroup'
 // Parameters
 param parDeploymentPrefix string
 param parFrontDoorName string
-param parParentDnsName string
+
+param parDnsSubscriptionId string
 param parDnsResourceGroupName string
+param parParentDnsName string
+
 param parWorkloadName string
 param parOriginHostName string
 param parDnsZoneHostnamePrefix string
@@ -121,7 +124,7 @@ resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' 
 
 module dnsCNAME './../dnsCName/main.bicep' = {
   name: '${parDeploymentPrefix}-${parWorkloadName}-dnsCNAME'
-  scope: resourceGroup(parDnsResourceGroupName)
+  scope: resourceGroup(parDnsSubscriptionId, parDnsResourceGroupName)
 
   params: {
     parDns: parDnsZoneHostnamePrefix
