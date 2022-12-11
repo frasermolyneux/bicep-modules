@@ -23,7 +23,7 @@ resource frontDoor 'Microsoft.Cdn/profiles@2021-06-01' existing = {
 // Existing Out-Of-Scope Resources
 resource parentDnsZone 'Microsoft.Network/dnsZones@2018-05-01' existing = {
   name: parParentDnsName
-  scope: resourceGroup(parDnsResourceGroupName)
+  scope: resourceGroup(parDnsSubscriptionId, parDnsResourceGroupName)
 }
 
 // Module Resources
