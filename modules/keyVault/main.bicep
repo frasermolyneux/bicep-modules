@@ -11,6 +11,8 @@ param parKeyVaultCreateMode string = 'recover'
 param parEnabledForDeployment bool = false
 param parEnabledForTemplateDeployment bool = false
 
+param parEnabledForRbacAuthorization bool = false
+
 param parSoftDeleteRetentionInDays int = 90
 
 // Module Resources
@@ -24,7 +26,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
     createMode: parKeyVaultCreateMode
 
     enablePurgeProtection: true
-    enableRbacAuthorization: false
+    enableRbacAuthorization: parEnabledForRbacAuthorization
     enabledForDeployment: parEnabledForDeployment
     enabledForTemplateDeployment: parEnabledForTemplateDeployment
 
