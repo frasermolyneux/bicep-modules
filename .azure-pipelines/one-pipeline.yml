@@ -58,6 +58,6 @@ stages:
               . ${env:BUILD_SOURCESDIRECTORY}/.azure-pipelines/scripts/Publish-BicepModuleToAcr.ps1 `
                 -moduleName $moduleName `
                 -modulesRootPath ${env:BUILD_SOURCESDIRECTORY}/modules `
-                -acrName acrmxplatformprduksouth `
+                -acrName acr4xhbmv4lmxxbs `
                 -previewRelease $previewRelease
             }
