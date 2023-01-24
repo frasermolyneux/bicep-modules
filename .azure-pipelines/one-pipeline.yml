@@ -27,7 +27,7 @@ stages:
   - template: jobs/bicep-lint-code.yml@ado-pipeline-templates
     parameters: 
       jobName: 'BicepLinter'
-      azureSubscription: 'spn-ado-Personal-Public-devtest'
+      azureSubscription: 'spn-bicep-modules-production'
       bicepDirectory: '$(Build.sourcesDirectory)/modules'
       
 - stage: Deploy
@@ -37,7 +37,7 @@ stages:
     steps:
       - task: AzureCLI@2
         inputs:
-          azureSubscription: 'spn-ado-Personal-Public-bicep-modules'
+          azureSubscription: 'spn-bicep-modules-production'
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           failOnStandardError: true
