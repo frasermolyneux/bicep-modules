@@ -35,7 +35,7 @@ module keyVaultSecret './../keyVaultSecret/main.bicep' = {
   params: {
     parKeyVaultName: parKeyVaultName
     parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-apikey'
-    parSecretValue: apiManagementSubscription.properties.primaryKey
+    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
     parTags: parTags
   }
 }
