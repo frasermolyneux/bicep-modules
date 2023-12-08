@@ -65,5 +65,5 @@ else {
 
 $tagsToPushTo | ForEach-Object {
     Write-Host "Publishing module to: 'br:$acrName.azurecr.io/${acrRepository}' with tag: '$_'"
-    az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$_"
+    az bicep publish --file $moduleFilePath --target "br:$acrName.azurecr.io/${acrRepository}:$_" --force
 }
