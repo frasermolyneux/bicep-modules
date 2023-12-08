@@ -12,7 +12,7 @@ pr:
     exclude:
     - 'docs/*'
 
-pool: 'Dedicated'
+pool: "windows-latest"
 
 resources:
   repositories:
