@@ -6,6 +6,8 @@ param (
     [boolean] $previewRelease = $true
 )
 
+az config set bicep.use_binary_from_path=if_found_in_ci
+
 $moduleFilePath = Join-Path $modulesRootPath $moduleName "main.bicep"
 $metadataFilePath = Join-Path $modulesRootPath $moduleName "metadata.json"
 $acrRepository = "$repositoryPrefix/$moduleName".ToLower()
