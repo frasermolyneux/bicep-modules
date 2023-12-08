@@ -12,7 +12,8 @@ pr:
     exclude:
     - 'docs/*'
 
-pool: "windows-latest"
+  pool:
+    vmImage: 'windows-latest'
 
 resources:
   repositories:
