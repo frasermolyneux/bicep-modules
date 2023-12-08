@@ -122,7 +122,7 @@ resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' 
   }
 }
 
-module dnsCNAME './../dnsCName/main.bicep' = {
+module dnsCNAME './../dnsCNAME/main.bicep' = {
   name: '${parDeploymentPrefix}-dnsCNAME'
   scope: resourceGroup(parDnsSubscriptionId, parDnsResourceGroupName)
 
