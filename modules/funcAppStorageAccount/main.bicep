@@ -9,7 +9,7 @@ param parWorkloadName string
 param parTags object
 
 // Module Resources
-resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: 'sa${parWorkloadName}${parEnvironment}'
   location: parLocation
   kind: 'StorageV2'
@@ -17,6 +17,18 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
 
   sku: {
     name: 'Standard_LRS'
+  }
+
+  properties: {
+    minimumTlsVersion: 'TLS1_2'
+
+    networkAcls: {
+      bypass: 'AzureServices'
+      defaultAction: 'Deny'
+    }
+
+    supportsHttpsTrafficOnly: true
+    allowBlobPublicAccess: false
   }
 }
 
