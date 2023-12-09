@@ -1,6 +1,12 @@
 # Bicep Modules
 
-[![Build Status](https://dev.azure.com/frasermolyneux/Personal-Public/_apis/build/status/bicep-modules.OnePipeline?repoName=frasermolyneux%2Fbicep-modules&branchName=main)](https://dev.azure.com/frasermolyneux/Personal-Public/_build/latest?definitionId=175&repoName=frasermolyneux%2Fbicep-modules&branchName=main)
+| Stage                  | Status                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DevOps Secure Scanning | [![Build Status](https://dev.azure.com/frasermolyneux/Personal-Public/_apis/build/status%2Fbicep-modules.DevOpsSecureScanning?branchName=main)](https://dev.azure.com/frasermolyneux/Personal-Public/_build/latest?definitionId=209&branchName=main)                                                                                         |
+| Build                  | [![Build Status](https://dev.azure.com/frasermolyneux/Personal-Public/_apis/build/status%2Fbicep-modules.OnePipeline?repoName=frasermolyneux%2Fbicep-modules&branchName=main&stageName=Build)](https://dev.azure.com/frasermolyneux/Personal-Public/_build/latest?definitionId=175&repoName=frasermolyneux%2Fbicep-modules&branchName=main)  |
+| Release to Production  | [![Build Status](https://dev.azure.com/frasermolyneux/Personal-Public/_apis/build/status%2Fbicep-modules.OnePipeline?repoName=frasermolyneux%2Fbicep-modules&branchName=main&stageName=Deploy)](https://dev.azure.com/frasermolyneux/Personal-Public/_build/latest?definitionId=175&repoName=frasermolyneux%2Fbicep-modules&branchName=main) |
+
+---
 
 ## Overview
 
