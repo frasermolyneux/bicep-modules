@@ -1,6 +1,6 @@
 param (
     $applicationName,
-    $appRoles = $null
+    $appRoles = $null # Assumed to be a JSON string
 )
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" | Out-Null
@@ -16,5 +16,5 @@ if ($null -eq $applicationServicePrincipal) {
 }
 
 if ($null -ne $appRoles) {
-    az ad app update --id "$applicationId" --app-roles "app-registration-manifests/$appRoles" | Out-Null
+    az ad app update --id "$applicationId" --app-roles "$appRoles" | Out-Null
 }
