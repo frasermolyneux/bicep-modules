@@ -1,7 +1,12 @@
 #!/bin/bash
 
-applicationName=$1
-appRoles=$2
+clientId=$1
+clientSecret=$2
+tenantId=$3
+applicationName=$4
+appRoles=$5
+
+az login --service-principal -u $clientId -p $clientSecret --tenant $tenantId
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
 applicationId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].appId' | jq -r '.[]')
