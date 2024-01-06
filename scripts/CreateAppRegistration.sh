@@ -6,6 +6,8 @@ tenantId=$3
 applicationName=$4
 appRoles=$5
 
+echo "Creating app registration $applicationName in tenant $tenantId"
+
 az login --service-principal -u "$clientId" -p "$clientSecret" --tenant "$tenantId"
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
