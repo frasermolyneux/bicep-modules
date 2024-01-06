@@ -1,7 +1,5 @@
 #!/bin/bash
 
-declare -A DeploymentScriptOutputs
-
 clientId=$1
 clientSecret=$2
 tenantId=$3
@@ -15,10 +13,6 @@ az login --service-principal -u "$clientId" -p "$clientSecret" --tenant "$tenant
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
 applicationId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].appId' | jq -r '.[]')
 objectId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].id' | jq -r '.[]')
-
-# Store the outputs in the associative array
-DeploymentScriptOutputs["ApplicationId"]=$applicationId
-DeploymentScriptOutputs["ObjectId"]=$objectId
 
 az ad app update --id "$applicationId" --sign-in-audience 'AzureADMyOrg' --enable-id-token-issuance true --enable-access-token-issuance false > /dev/null
 az rest --method PATCH --uri "https://graph.microsoft.com/v1.0/applications/$objectId" --headers 'Content-Type=application/json' --body '{"api":{"requestedAccessTokenVersion":1}}'
@@ -34,5 +28,11 @@ then
     az ad app update --id "$applicationId" --app-roles "app-registration-manifests/$appRoles" > /dev/null
 fi
 
-# Print the associative array
-declare -p DeploymentScriptOutputs
+outputJson=$(jq -n \
+                --arg clientId "$clientId" \
+                --arg clientSecret "$clientSecret" \
+                --arg tenantId "$tenantId" \
+                --arg applicationName "$applicationName" \
+                --arg appRoles "$appRoles" \
+                '{clientId: $clientId, clientSecret: $clientSecret, tenantId: $tenantId, applicationName: $applicationName, appRoles: $appRoles}' )
+echo $outputJson > $AZ_SCRIPTS_OUTPUT_PATH
