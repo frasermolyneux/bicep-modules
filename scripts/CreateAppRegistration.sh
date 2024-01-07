@@ -20,5 +20,5 @@ then
     az ad app update --id "$applicationId" --app-roles "$appRoles" > /dev/null
 fi
 
-json="{\"applicationName\":\"$applicationName\"}"
+json="{\"applicationName\": $applicationName}"
 echo "$json" > $AZ_SCRIPTS_OUTPUT_PATH
