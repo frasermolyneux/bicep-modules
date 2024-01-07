@@ -1,14 +1,7 @@
 #!/bin/bash
 
-clientId=$1
-clientSecret=$2
-tenantId=$3
-applicationName=$4
-appRoles=$5
-
-echo "Creating app registration $applicationName in tenant $tenantId"
-
-az login --service-principal -u "$clientId" -p "$clientSecret" --tenant "$tenantId"
+applicationName=$1
+appRoles=$2
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
 applicationId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].appId' | jq -r '.[]')
@@ -27,12 +20,3 @@ if [ ! -z "$appRoles" ]
 then
     az ad app update --id "$applicationId" --app-roles "app-registration-manifests/$appRoles" > /dev/null
 fi
-
-outputJson=$(jq -n \
-                --arg clientId "$clientId" \
-                --arg clientSecret "$clientSecret" \
-                --arg tenantId "$tenantId" \
-                --arg applicationName "$applicationName" \
-                --arg appRoles "$appRoles" \
-                '{clientId: $clientId, clientSecret: $clientSecret, tenantId: $tenantId, applicationName: $applicationName, appRoles: $appRoles}' )
-echo $outputJson > $AZ_SCRIPTS_OUTPUT_PATH
