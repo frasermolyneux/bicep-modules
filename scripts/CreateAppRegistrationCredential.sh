@@ -46,7 +46,7 @@ if [ "$(echo $credentials | jq -r 'length')" -eq 2 ]; then
         _jq() {
             echo ${row} | base64 --decode | jq -r ${1}
         }
-        echo "Credential expires in '$(_jq '.endDateTime')"
+        echo "Credential expires in '$(_jq -r '.endDateTime')"
     done
 
     credentialToDelete=$(echo $credentials | jq -r 'sort_by(.endDateTime) | .[0]')
