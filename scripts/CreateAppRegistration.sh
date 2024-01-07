@@ -19,3 +19,7 @@ if [ ! -z "$appRoles" ]
 then
     az ad app update --id "$applicationId" --app-roles "$appRoles" > /dev/null
 fi
+
+jq -n -c --arg applicationName "$applicationName" \'{"applicationName": $applicationName}\' > $AZ_SCRIPTS_OUTPUT_PATH
+jq -n -c --arg applicationId "$applicationId" \'{"applicationId": $applicationId}\' > $AZ_SCRIPTS_OUTPUT_PATH
+jq -n -c --arg objectId "$objectId" \'{"objectId": $objectId}\' > $AZ_SCRIPTS_OUTPUT_PATH
