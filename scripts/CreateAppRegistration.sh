@@ -20,4 +20,7 @@ then
     az ad app update --id "$applicationId" --app-roles "$appRoles" > /dev/null
 fi
 
-echo "{\"applicationName\": $applicationName, \"applicationId\": $applicationId, \"objectId\": $objectId}" > $AZ_SCRIPTS_OUTPUT_PATH
+echo '{}' |
+  jq --arg x 'applicationName' '.applicationName=$x' |
+  jq --arg x 'applicationId' '.applicationId=$x' |
+  jq --arg x 'objectId' '.objectId=$x' >$AZ_SCRIPTS_OUTPUT_PATH
