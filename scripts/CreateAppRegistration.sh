@@ -20,6 +20,4 @@ then
     az ad app update --id "$applicationId" --app-roles "$appRoles" > /dev/null
 fi
 
-echo "{\"applicationName\": $applicationName}" > $AZ_SCRIPTS_OUTPUT_PATH
-echo "{\"applicationId\": $applicationId}" > $AZ_SCRIPTS_OUTPUT_PATH
-echo "{\"objectId\": $objectId}" > $AZ_SCRIPTS_OUTPUT_PATH
+echo "{\"applicationName\": $applicationName}, {\"applicationId\": $applicationId}, {\"objectId\": $objectId}" > $AZ_SCRIPTS_OUTPUT_PATH
