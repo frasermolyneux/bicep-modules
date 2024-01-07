@@ -1,10 +1,6 @@
 #!/bin/bash
 
 applicationName=$1
-appRoles=$2
-
-printf $appRoles >&2
-printf "$appRoles" >&2
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
 applicationId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].appId' | jq -r '.[]')
@@ -21,5 +17,5 @@ fi
 
 if [ ! -z "$appRoles" ]
 then
-    az ad app update --id "$applicationId" --app-roles "$(jq -r $appRoles)" > /dev/null
+    az ad app update --id "$applicationId" --app-roles "$appRoles" > /dev/null
 fi
