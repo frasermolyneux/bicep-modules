@@ -4,6 +4,7 @@ applicationName=$1
 appRoles=$2
 
 echo $appRoles
+echo "$appRoles"
 
 az ad app create --display-name "$applicationName" --identifier-uris "api://$applicationName" > /dev/null
 applicationId=$(az ad app list --filter "displayName eq '$applicationName'" --query '[].appId' | jq -r '.[]')
