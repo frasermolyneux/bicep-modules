@@ -18,5 +18,5 @@ fi
 
 if [ ! -z "$appRoles" ]
 then
-    az ad app update --id "$applicationId" --app-roles '"'"$appRoles"'"' > /dev/null
+    az ad app update --id "$applicationId" --app-roles "$($appRoles | jq -r $appRoles)" > /dev/null
 fi
