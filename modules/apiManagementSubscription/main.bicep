@@ -28,14 +28,26 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
   }
 }
 
-module keyVaultSecret './../keyVaultSecret/main.bicep' = {
-  name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecret'
+module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
+  name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecretPrimary'
   scope: resourceGroup(parWorkloadSubscriptionId, parWorkloadResourceGroupName)
 
   params: {
     parKeyVaultName: parKeyVaultName
-    parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-api-key'
+    parSecretName: '${apiManagementSubscription.name}-api-key-primary'
     parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
+    parTags: parTags
+  }
+}
+
+module keyVaultSecretSeconday './../keyVaultSecret/main.bicep' = {
+  name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecretSecondary'
+  scope: resourceGroup(parWorkloadSubscriptionId, parWorkloadResourceGroupName)
+
+  params: {
+    parKeyVaultName: parKeyVaultName
+    parSecretName: '${apiManagementSubscription.name}-api-key-secondary'
+    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
     parTags: parTags
   }
 }
