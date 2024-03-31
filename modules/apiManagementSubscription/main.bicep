@@ -11,6 +11,9 @@ param parSubscriptionScopeIdentifier string
 param parSubscriptionScope string
 param parTags object
 
+// Variables
+var varDeploymentUniqueId = uniqueString('apiManagementSubscription', parDeploymentPrefix, parWorkloadName)
+
 // Existing In-Scope Resources
 resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' existing = {
   name: parApiManagementName
@@ -29,7 +32,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
 }
 
 module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
-  name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecretPrimary'
+  name: '${varDeploymentUniqueId}-${parSubscriptionScopeIdentifier}-keyVaultSecretPrimary'
   scope: resourceGroup(parWorkloadSubscriptionId, parWorkloadResourceGroupName)
 
   params: {
@@ -41,7 +44,7 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
 }
 
 module keyVaultSecretSeconday './../keyVaultSecret/main.bicep' = {
-  name: '${parDeploymentPrefix}-${parSubscriptionScopeIdentifier}-keyVaultSecretSecondary'
+  name: '${varDeploymentUniqueId}-${parSubscriptionScopeIdentifier}-keyVaultSecretSecondary'
   scope: resourceGroup(parWorkloadSubscriptionId, parWorkloadResourceGroupName)
 
   params: {
