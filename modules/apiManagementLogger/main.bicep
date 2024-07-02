@@ -5,7 +5,7 @@ targetScope = 'resourceGroup'
 param apiManagementName string
 
 @description('The app insights name (if in-scope)')
-param appInsightsName string
+param appInsightsName string = ''
 
 @description('The app insights reference (if out-of-scope)')
 param appInsightsRef object = {}

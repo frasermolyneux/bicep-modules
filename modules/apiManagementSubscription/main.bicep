@@ -11,7 +11,7 @@ param subscriptionName string
 param apiScope string
 
 @description('The key vault name (if in-scope)')
-param keyVaultName string
+param keyVaultName string = ''
 
 @description('The key vault reference (if out-of-scope)')
 param keyVaultRef object = {}
