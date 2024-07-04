@@ -17,7 +17,7 @@ param location string = resourceGroup().location
 param tags object
 
 // Resource References
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = if (logAnalyticsWorkspaceRef == {}) {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = {
   name: logAnalyticsWorkspaceName
   scope: resourceGroup(
     logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.SubscriptionId : subscription().subscriptionId,
