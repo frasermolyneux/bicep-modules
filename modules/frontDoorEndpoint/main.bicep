@@ -1,37 +1,43 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-param parDeploymentPrefix string
-param parFrontDoorName string
+@description('The front door resource name')
+param frontDoorName string
 
-param parDnsSubscriptionId string
-param parDnsResourceGroupName string
-param parParentDnsName string
+@description('The DNS zone name (if in-scope)')
+param dnsZoneName string = ''
 
-param parWorkloadName string
-param parOriginHostName string
-param parDnsZoneHostnamePrefix string
-param parCustomHostname string
+@description('The DNS zone reference (if out-of-scope)')
+param dnsZoneRef object = {}
 
-param parTags object
+@description('The subdomain for the dns zone')
+param subdomain string
 
-// Existing In-Scope Resources
+@description('The origin hostname')
+param originHostName string
+
+@description('The tags to apply to the resources.')
+param tags object
+
+// Resource References
 resource frontDoor 'Microsoft.Cdn/profiles@2021-06-01' existing = {
-  name: parFrontDoorName
+  name: frontDoorName
 }
 
-// Existing Out-Of-Scope Resources
-resource parentDnsZone 'Microsoft.Network/dnsZones@2018-05-01' existing = {
-  name: parParentDnsName
-  scope: resourceGroup(parDnsSubscriptionId, parDnsResourceGroupName)
+resource dnsZone 'Microsoft.Network/dnsZones@2018-05-01' existing = {
+  name: dnsZoneRef != {} ? dnsZoneRef.name : dnsZoneName
+  scope: resourceGroup(
+    dnsZoneRef != {} ? dnsZoneRef.SubscriptionId : subscription().subscriptionId,
+    dnsZoneRef != {} ? dnsZoneRef.ResourceGroupName : resourceGroup().name
+  )
 }
 
 // Module Resources
 resource frontDoorEndpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
   parent: frontDoor
-  name: parWorkloadName
+  name: '${subdomain}.${dnsZone.name}'
   location: 'Global'
-  tags: parTags
+  tags: tags
 
   properties: {
     enabledState: 'Enabled'
@@ -40,7 +46,7 @@ resource frontDoorEndpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
 
 resource frontDoorOriginGroup 'Microsoft.Cdn/profiles/origingroups@2021-06-01' = {
   parent: frontDoor
-  name: '${parWorkloadName}-origin-group'
+  name: '${subdomain}.${dnsZone.name}-origin-group'
 
   properties: {
     loadBalancingSettings: {
@@ -62,13 +68,13 @@ resource frontDoorOriginGroup 'Microsoft.Cdn/profiles/origingroups@2021-06-01' =
 
 resource frontDoorOrigin 'Microsoft.Cdn/profiles/origingroups/origins@2021-06-01' = {
   parent: frontDoorOriginGroup
-  name: '${parWorkloadName}-origin'
+  name: '${subdomain}.${dnsZone.name}-origin'
 
   properties: {
-    hostName: parOriginHostName
+    hostName: originHostName
     httpPort: 80
     httpsPort: 443
-    originHostHeader: parOriginHostName
+    originHostHeader: originHostName
     priority: 1
     weight: 1000
     enabledState: 'Enabled'
@@ -78,24 +84,24 @@ resource frontDoorOrigin 'Microsoft.Cdn/profiles/origingroups/origins@2021-06-01
 
 resource frontDoorCustomDomain 'Microsoft.Cdn/profiles/customdomains@2021-06-01' = {
   parent: frontDoor
-  name: '${parWorkloadName}-custom-domain'
+  name: '${subdomain}.${dnsZone.name}-custom-domain'
 
   properties: {
-    hostName: parCustomHostname
+    hostName: '${subdomain}.${dnsZone.name}'
     tlsSettings: {
       certificateType: 'ManagedCertificate'
       minimumTlsVersion: 'TLS12'
     }
 
     azureDnsZone: {
-      id: parentDnsZone.id
+      id: dnsZone.id
     }
   }
 }
 
 resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
   parent: frontDoorEndpoint
-  name: '${parWorkloadName}-route'
+  name: '${subdomain}.${dnsZone.name}-route'
 
   properties: {
     customDomains: [
@@ -122,15 +128,18 @@ resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' 
   }
 }
 
-module dnsCNAME './../dnsCNAME/main.bicep' = {
-  name: '${parDeploymentPrefix}-dnsCNAME'
-  scope: resourceGroup(parDnsSubscriptionId, parDnsResourceGroupName)
+module dnsCNAME './../frontDoorCNAME/main.bicep' = {
+  name: '${subdomain}.${dnsZone.name}-frontDoorCNAME'
+  scope: resourceGroup(
+    dnsZoneRef != {} ? dnsZoneRef.SubscriptionId : subscription().subscriptionId,
+    dnsZoneRef != {} ? dnsZoneRef.ResourceGroupName : resourceGroup().name
+  )
 
   params: {
-    parDns: parDnsZoneHostnamePrefix
-    parParentDnsName: parParentDnsName
-    parCname: frontDoorEndpoint.properties.hostName
-    parCnameValidationToken: frontDoorCustomDomain.properties.validationProperties.validationToken
-    parTags: parTags
+    domain: dnsZone.name
+    subdomain: subdomain
+    cname: frontDoorEndpoint.properties.hostName
+    cnameValidationToken: frontDoorCustomDomain.properties.validationProperties.validationToken
+    tags: tags
   }
 }
