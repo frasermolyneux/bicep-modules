@@ -32,7 +32,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
   properties: {
     allowTracing: false
     displayName: subscriptionName
-    scope: apiScope
+    scope: '/apis/${apiScope}'
   }
 }
 
