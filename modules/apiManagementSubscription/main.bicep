@@ -26,7 +26,7 @@ resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' exis
 
 // Module Resources
 resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscriptions@2021-08-01' = {
-  name: '${subscriptionName}-${apiScope}'
+  name: subscriptionName
   parent: apiManagement
 
   properties: {
@@ -37,7 +37,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
 }
 
 module keyVaultSecretPrimaryInScope './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
-  name: '${subscriptionName}-${apiScope}-keyVaultSecretPrimary'
+  name: '${apiManagementSubscription.name}-api-key-primary'
 
   params: {
     parKeyVaultName: keyVaultName
@@ -48,7 +48,7 @@ module keyVaultSecretPrimaryInScope './../keyVaultSecret/main.bicep' = if (keyVa
 }
 
 module keyVaultSecretSecondaryInScope './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
-  name: '${subscriptionName}-${apiScope}-keyVaultSecretSecondary'
+  name: '${apiManagementSubscription.name}-api-key-secondary'
 
   params: {
     parKeyVaultName: keyVaultName
@@ -59,7 +59,7 @@ module keyVaultSecretSecondaryInScope './../keyVaultSecret/main.bicep' = if (key
 }
 
 module keyVaultSecretPrimaryOutOfScope './../keyVaultSecret/main.bicep' = if (keyVaultRef != {}) {
-  name: '${subscriptionName}-${apiScope}-keyVaultSecretPrimary'
+  name: '${apiManagementSubscription.name}-api-key-primary'
   scope: resourceGroup(keyVaultRef.SubscriptionId, keyVaultRef.ResourceGroupName)
 
   params: {
@@ -71,7 +71,7 @@ module keyVaultSecretPrimaryOutOfScope './../keyVaultSecret/main.bicep' = if (ke
 }
 
 module keyVaultSecretSecondaryOutOfScope './../keyVaultSecret/main.bicep' = if (keyVaultRef != {}) {
-  name: '${subscriptionName}-${apiScope}-keyVaultSecretSecondary'
+  name: '${apiManagementSubscription.name}-api-key-secondary'
   scope: resourceGroup(keyVaultRef.SubscriptionId, keyVaultRef.ResourceGroupName)
 
   params: {
