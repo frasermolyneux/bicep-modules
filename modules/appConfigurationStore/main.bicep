@@ -35,3 +35,10 @@ resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2022
     softDeleteRetentionInDays: 30
   }
 }
+
+// Outputs
+output appConfigurationStoreRef object = {
+  Name: configurationStore.name
+  SubscriptionId: subscription().subscriptionId
+  ResourceGroupName: resourceGroup().name
+}

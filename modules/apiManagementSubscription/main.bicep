@@ -83,4 +83,4 @@ module keyVaultSecretSecondaryOutOfScope './../keyVaultSecret/main.bicep' = if (
 }
 
 // Outputs
-output outSubscriptionName string = apiManagementSubscription.name
+output subscriptionName string = apiManagementSubscription.name
