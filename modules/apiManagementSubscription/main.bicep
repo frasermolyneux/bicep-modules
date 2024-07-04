@@ -35,8 +35,9 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
     scope: '/apis/${apiScope}'
   }
 }
+
 module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
-  name: uniqueString('${apiManagementSubscription.name}-api-key-primary')
+  name: 'api-key-primary-${uniqueString(subscriptionName)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
@@ -51,7 +52,7 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
 }
 
 module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
-  name: uniqueString('${apiManagementSubscription.name}-api-key-secondary')
+  name: 'api-key-secondary-${uniqueString(subscriptionName)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
