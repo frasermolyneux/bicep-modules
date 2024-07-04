@@ -1,22 +1,27 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-param parAppConfigurationStoreName string
-param parLocation string
+@description('The app configuration store name')
+param appConfigurationStoreName string
 
-param parAppConfigurationStoreSku string = 'free'
+@description('The app configuration sku')
+param appConfigurationStoreSku string = 'free'
 
-param parTags object
+@description('The location of the resources.')
+param location string = resourceGroup().location
+
+@description('The tags to apply to the resources.')
+param tags object
 
 // Module Resources
 resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2022-05-01' = {
-  name: parAppConfigurationStoreName
-  location: parLocation
+  name: appConfigurationStoreName
+  location: location
 
-  tags: parTags
+  tags: tags
 
   sku: {
-    name: parAppConfigurationStoreSku
+    name: appConfigurationStoreSku
   }
 
   identity: {
