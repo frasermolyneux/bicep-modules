@@ -20,7 +20,7 @@ param tags object
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = if (logAnalyticsWorkspaceRef == {}) {
   name: logAnalyticsWorkspaceName
   scope: resourceGroup(
-    logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.SubscriptionId : subscription().id,
+    logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.SubscriptionId : subscription().subscriptionId,
     logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.ResourceGroupName : resourceGroup().name
   )
 }

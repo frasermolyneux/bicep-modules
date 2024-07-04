@@ -18,7 +18,7 @@ resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' exis
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = if (appInsightsRef == {}) {
   name: appInsightsRef != {} ? appInsightsRef.name : appInsightsName
   scope: resourceGroup(
-    appInsightsRef != {} ? appInsightsRef.SubscriptionId : subscription().id,
+    appInsightsRef != {} ? appInsightsRef.SubscriptionId : subscription().subscriptionId,
     appInsightsRef != {} ? appInsightsRef.ResourceGroupName : resourceGroup().name
   )
 }
