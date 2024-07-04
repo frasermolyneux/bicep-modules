@@ -17,13 +17,12 @@ param location string = resourceGroup().location
 param tags object
 
 // Resource References
-resource logAnalyticsWorkspaceInScope 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = if (logAnalyticsWorkspaceRef == {}) {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = if (logAnalyticsWorkspaceRef == {}) {
   name: logAnalyticsWorkspaceName
-}
-
-resource logAnalyticsWorkspaceOutOfScope 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = if (logAnalyticsWorkspaceRef != {}) {
-  name: logAnalyticsWorkspaceRef.Name
-  scope: resourceGroup(logAnalyticsWorkspaceRef.SubscriptionId, logAnalyticsWorkspaceRef.ResourceGroupName)
+  scope: resourceGroup(
+    logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.SubscriptionId : subscription().id,
+    logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.ResourceGroupName : resourceGroup().name
+  )
 }
 
 // Module Resources
@@ -35,9 +34,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 
   properties: {
     Application_Type: 'web'
-    WorkspaceResourceId: logAnalyticsWorkspaceRef == {}
-      ? logAnalyticsWorkspaceInScope.id
-      : logAnalyticsWorkspaceOutOfScope.id
+    WorkspaceResourceId: logAnalyticsWorkspace.id
   }
 }
 

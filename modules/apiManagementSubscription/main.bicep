@@ -35,9 +35,12 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
     scope: '/apis/${apiScope}'
   }
 }
-
-module keyVaultSecretPrimaryInScope './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
+module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
   name: '${apiManagementSubscription.name}-api-key-primary'
+  scope: resourceGroup(
+    keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().id,
+    keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
+  )
 
   params: {
     parKeyVaultName: keyVaultName
@@ -47,32 +50,12 @@ module keyVaultSecretPrimaryInScope './../keyVaultSecret/main.bicep' = if (keyVa
   }
 }
 
-module keyVaultSecretSecondaryInScope './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
+module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = if (keyVaultRef == {}) {
   name: '${apiManagementSubscription.name}-api-key-secondary'
-
-  params: {
-    parKeyVaultName: keyVaultName
-    parSecretName: '${apiManagementSubscription.name}-api-key-secondary'
-    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
-    parTags: tags
-  }
-}
-
-module keyVaultSecretPrimaryOutOfScope './../keyVaultSecret/main.bicep' = if (keyVaultRef != {}) {
-  name: '${apiManagementSubscription.name}-api-key-primary'
-  scope: resourceGroup(keyVaultRef.SubscriptionId, keyVaultRef.ResourceGroupName)
-
-  params: {
-    parKeyVaultName: keyVaultName
-    parSecretName: '${apiManagementSubscription.name}-api-key-primary'
-    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
-    parTags: tags
-  }
-}
-
-module keyVaultSecretSecondaryOutOfScope './../keyVaultSecret/main.bicep' = if (keyVaultRef != {}) {
-  name: '${apiManagementSubscription.name}-api-key-secondary'
-  scope: resourceGroup(keyVaultRef.SubscriptionId, keyVaultRef.ResourceGroupName)
+  scope: resourceGroup(
+    keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().id,
+    keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
+  )
 
   params: {
     parKeyVaultName: keyVaultName

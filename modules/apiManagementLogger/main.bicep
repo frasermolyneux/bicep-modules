@@ -15,27 +15,24 @@ resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' exis
   name: apiManagementName
 }
 
-resource appInsightsInScope 'Microsoft.Insights/components@2020-02-02' existing = if (appInsightsRef == {}) {
-  name: appInsightsName
-}
-
-resource appInsightsOutOfScope 'Microsoft.Insights/components@2020-02-02' existing = if (appInsightsRef != {}) {
-  name: appInsightsRef.Name
-  scope: resourceGroup(appInsightsRef.SubscriptionId, appInsightsRef.ResourceGroupName)
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = if (appInsightsRef == {}) {
+  name: appInsightsRef != {} ? appInsightsRef.name : appInsightsName
+  scope: resourceGroup(
+    appInsightsRef != {} ? appInsightsRef.SubscriptionId : subscription().id,
+    appInsightsRef != {} ? appInsightsRef.ResourceGroupName : resourceGroup().name
+  )
 }
 
 // Module Resources
 resource apiManagementLogger 'Microsoft.ApiManagement/service/loggers@2021-08-01' = {
-  name: appInsightsRef == {} ? appInsightsInScope.name : appInsightsOutOfScope.name
+  name: appInsights.name
   parent: apiManagement
 
   properties: {
     credentials: {
-      instrumentationKey: appInsightsRef == {}
-        ? appInsightsInScope.properties.InstrumentationKey
-        : appInsightsOutOfScope.properties.InstrumentationKey
+      instrumentationKey: appInsights.properties.InstrumentationKey
     }
     loggerType: 'applicationInsights'
-    resourceId: appInsightsRef == {} ? appInsightsInScope.id : appInsightsOutOfScope.id
+    resourceId: appInsights.id
   }
 }
