@@ -4,8 +4,8 @@ targetScope = 'resourceGroup'
 @description('The api management name')
 param apiManagementName string
 
-@description('The subscription name')
-param subscriptionName string
+@description('The workload name')
+param workloadName string
 
 @description('The api scope')
 param apiScope string
@@ -18,6 +18,9 @@ param keyVaultRef object = {}
 
 @description('The tags to apply to the resources.')
 param tags object
+
+// Variables
+var subscriptionName = '${workloadName}-${apiScope}'
 
 // Resource References
 resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' existing = {
@@ -37,7 +40,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
 }
 
 module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
-  name: 'api-key-primary-${uniqueString(subscriptionName, apiScope)}'
+  name: 'api-key-primary-${uniqueString(subscriptionName)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
@@ -52,7 +55,7 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
 }
 
 module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
-  name: 'api-key-secondary-${uniqueString(subscriptionName, apiScope)}'
+  name: 'api-key-secondary-${uniqueString(subscriptionName)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
