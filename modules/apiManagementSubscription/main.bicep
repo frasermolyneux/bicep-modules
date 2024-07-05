@@ -48,7 +48,7 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
 
   params: {
     keyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    secretName: '${apiManagementSubscription.name}-${apiScope}-api-key-primary'
+    secretName: '${apiManagementSubscription.name}-api-key-primary'
     secretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
     tags: tags
   }
@@ -63,7 +63,7 @@ module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
 
   params: {
     keyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    secretName: '${apiManagementSubscription.name}-${apiScope}-api-key-secondary'
+    secretName: '${apiManagementSubscription.name}-api-key-secondary'
     secretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
     tags: tags
   }
