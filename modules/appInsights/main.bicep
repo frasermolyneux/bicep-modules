@@ -18,7 +18,7 @@ param tags object
 
 // Resource References
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' existing = {
-  name: logAnalyticsWorkspaceName
+  name: logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.name : logAnalyticsWorkspaceName
   scope: resourceGroup(
     logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.SubscriptionId : subscription().subscriptionId,
     logAnalyticsWorkspaceRef != {} ? logAnalyticsWorkspaceRef.ResourceGroupName : resourceGroup().name
