@@ -19,6 +19,9 @@ param originHostName string
 @description('The tags to apply to the resources.')
 param tags object
 
+// Variables
+var endpointResourceName = replace('${frontDoorName}.${subdomain}', '.', '-')
+
 // Resource References
 resource frontDoor 'Microsoft.Cdn/profiles@2021-06-01' existing = {
   name: frontDoorName
@@ -35,7 +38,7 @@ resource dnsZone 'Microsoft.Network/dnsZones@2018-05-01' existing = {
 // Module Resources
 resource frontDoorEndpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
   parent: frontDoor
-  name: '${subdomain}.${dnsZone.name}'
+  name: endpointResourceName
   location: 'Global'
   tags: tags
 
@@ -46,7 +49,7 @@ resource frontDoorEndpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
 
 resource frontDoorOriginGroup 'Microsoft.Cdn/profiles/origingroups@2021-06-01' = {
   parent: frontDoor
-  name: '${subdomain}.${dnsZone.name}-origin-group'
+  name: '${endpointResourceName}-origin-group'
 
   properties: {
     loadBalancingSettings: {
@@ -68,7 +71,7 @@ resource frontDoorOriginGroup 'Microsoft.Cdn/profiles/origingroups@2021-06-01' =
 
 resource frontDoorOrigin 'Microsoft.Cdn/profiles/origingroups/origins@2021-06-01' = {
   parent: frontDoorOriginGroup
-  name: '${subdomain}.${dnsZone.name}-origin'
+  name: '${endpointResourceName}-origin'
 
   properties: {
     hostName: originHostName
@@ -84,7 +87,7 @@ resource frontDoorOrigin 'Microsoft.Cdn/profiles/origingroups/origins@2021-06-01
 
 resource frontDoorCustomDomain 'Microsoft.Cdn/profiles/customdomains@2021-06-01' = {
   parent: frontDoor
-  name: '${subdomain}.${dnsZone.name}-custom-domain'
+  name: '${endpointResourceName}-custom-domain'
 
   properties: {
     hostName: '${subdomain}.${dnsZone.name}'
@@ -101,7 +104,7 @@ resource frontDoorCustomDomain 'Microsoft.Cdn/profiles/customdomains@2021-06-01'
 
 resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
   parent: frontDoorEndpoint
-  name: '${subdomain}.${dnsZone.name}-route'
+  name: '${endpointResourceName}-route'
 
   properties: {
     customDomains: [
@@ -129,7 +132,7 @@ resource frontDoorRoute 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' 
 }
 
 module dnsCNAME './../frontDoorCNAME/main.bicep' = {
-  name: '${subdomain}.${dnsZone.name}-frontDoorCNAME'
+  name: '${endpointResourceName}-frontDoorCNAME'
   scope: resourceGroup(
     dnsZoneRef != {} ? dnsZoneRef.SubscriptionId : subscription().subscriptionId,
     dnsZoneRef != {} ? dnsZoneRef.ResourceGroupName : resourceGroup().name
