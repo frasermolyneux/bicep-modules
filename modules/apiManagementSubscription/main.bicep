@@ -44,10 +44,10 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
   )
 
   params: {
-    parKeyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-${apiScope}-api-key-primary'
-    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
-    parTags: tags
+    keyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
+    secretName: '${apiManagementSubscription.name}-${apiScope}-api-key-primary'
+    secretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
+    tags: tags
   }
 }
 
@@ -59,10 +59,10 @@ module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
   )
 
   params: {
-    parKeyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-${apiScope}-api-key-secondary'
-    parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
-    parTags: tags
+    keyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
+    secretName: '${apiManagementSubscription.name}-${apiScope}-api-key-secondary'
+    secretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
+    tags: tags
   }
 }
 
