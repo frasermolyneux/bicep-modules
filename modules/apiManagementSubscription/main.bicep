@@ -68,3 +68,5 @@ module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
 
 // Outputs
 output subscriptionName string = apiManagementSubscription.name
+output primaryKeySecretRef object = keyVaultSecretPrimary.outputs.secretRef
+output secondaryKeySecretRef object = keyVaultSecretSecondary.outputs.secretRef
