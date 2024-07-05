@@ -20,7 +20,8 @@ param originHostName string
 param tags object
 
 // Variables
-var endpointResourceName = replace('${frontDoorName}.${subdomain}', '.', '-')
+var _dnsZoneName = dnsZoneRef != {} ? dnsZoneRef.name : dnsZoneName
+var endpointResourceName = replace('${subdomain}.${_dnsZoneName}', '.', '-')
 
 // Resource References
 resource frontDoor 'Microsoft.Cdn/profiles@2021-06-01' existing = {
