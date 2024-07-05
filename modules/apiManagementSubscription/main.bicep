@@ -37,7 +37,7 @@ resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscription
 }
 
 module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
-  name: 'api-key-primary-${uniqueString(subscriptionName)}'
+  name: 'api-key-primary-${uniqueString(subscriptionName, apiScope)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
@@ -45,14 +45,14 @@ module keyVaultSecretPrimary './../keyVaultSecret/main.bicep' = {
 
   params: {
     parKeyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    parSecretName: '${apiManagementSubscription.name}-api-key-primary'
+    parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-${apiScope}-api-key-primary'
     parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).primaryKey
     parTags: tags
   }
 }
 
 module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
-  name: 'api-key-secondary-${uniqueString(subscriptionName)}'
+  name: 'api-key-secondary-${uniqueString(subscriptionName, apiScope)}'
   scope: resourceGroup(
     keyVaultRef != {} ? keyVaultRef.SubscriptionId : subscription().subscriptionId,
     keyVaultRef != {} ? keyVaultRef.ResourceGroupName : resourceGroup().name
@@ -60,7 +60,7 @@ module keyVaultSecretSecondary './../keyVaultSecret/main.bicep' = {
 
   params: {
     parKeyVaultName: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
-    parSecretName: '${apiManagementSubscription.name}-api-key-secondary'
+    parSecretName: '${apiManagement.name}-${apiManagementSubscription.name}-${apiScope}-api-key-secondary'
     parSecretValue: apiManagementSubscription.listSecrets(apiManagementSubscription.apiVersion).secondaryKey
     parTags: tags
   }
