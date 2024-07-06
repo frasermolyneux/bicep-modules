@@ -7,10 +7,10 @@ param appConfigurationStoreName string
 @description('The app configuration sku')
 param appConfigurationStoreSku string = 'free'
 
-@description('The location of the resources.')
+@description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Module Resources

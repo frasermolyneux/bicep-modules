@@ -7,16 +7,16 @@ param workloadName string
 @description('The test url path')
 param testUrl string
 
-@description('The app insights name')
+@description('The app insights resource name')
 param appInsightsName string = ''
 
-@description('The app insights reference')
+@description('A reference to the app insights resource')
 param appInsightsRef object = {}
 
 @description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to be applied to the storage account')
+@description('The tags to apply to the resources')
 param tags object
 
 // Existing Resources

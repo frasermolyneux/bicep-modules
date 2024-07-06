@@ -1,7 +1,7 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The key vault name')
+@description('The key vault resource name')
 param keyVaultName string
 
 @description('The secret name')
@@ -11,7 +11,7 @@ param secretName string
 @description('The secret value')
 param secretValue string
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Resource References

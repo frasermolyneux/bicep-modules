@@ -1,10 +1,10 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The key vault name')
+@description('The key vault resource name')
 param keyVaultName string = ''
 
-@description('The key vault reference')
+@description('A reference to the key vault resource')
 param keyVaultRef object = {}
 
 @description('The principal id to grant access to the key vault')

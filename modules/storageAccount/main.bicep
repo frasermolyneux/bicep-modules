@@ -4,7 +4,7 @@ targetScope = 'resourceGroup'
 @description('The storage account name')
 param storageAccountName string = ''
 
-@description('The environment for the storage account (must set if not providing storageAccountName)')
+@description('The environment for the resources')
 param environment string = ''
 
 @description('The workload the storage account is for (must set if not providing storageAccountName)')
@@ -13,10 +13,10 @@ param workload string = ''
 @description('The storage account sku for the storage account')
 param sku string = 'Standard_LRS'
 
-@description('The location to deploy the storage account in')
+@description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to be applied to the storage account')
+@description('The tags to apply to the resources')
 param tags object
 
 // Module Resources

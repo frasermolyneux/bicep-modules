@@ -7,7 +7,7 @@ param frontDoorName string
 @description('The DNS zone name (if in-scope)')
 param dnsZoneName string = ''
 
-@description('The DNS zone reference (if out-of-scope)')
+@description('A reference to the dns zone resource')
 param dnsZoneRef object = {}
 
 @description('The subdomain for the dns zone')
@@ -16,7 +16,7 @@ param subdomain string
 @description('The origin hostname')
 param originHostName string
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Variables

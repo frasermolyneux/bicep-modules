@@ -1,10 +1,10 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The storage account name')
+@description('The key vault resource name')
 param keyVaultName string = ''
 
-@description('The environment for the storage account (must set if not providing keyVaultName)')
+@description('The environment for the resources')
 param environment string = ''
 
 @description('The workload the storage account is for (must set if not providing keyVaultName)')
@@ -25,10 +25,10 @@ param enabledForRbacAuthorization bool = true
 @description('Enable the key vault for deployment')
 param softDeleteRetentionInDays int = 90
 
-@description('The location to deploy the storage account in')
+@description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to be applied to the storage account')
+@description('The tags to apply to the resources')
 param tags object
 
 // Module Resources

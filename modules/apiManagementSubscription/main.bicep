@@ -1,7 +1,7 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The api management name')
+@description('The api management resource name')
 param apiManagementName string
 
 @description('The workload name')
@@ -10,13 +10,13 @@ param workloadName string
 @description('The api scope')
 param apiScope string
 
-@description('The key vault name (if in-scope)')
+@description('The key vault resource name')
 param keyVaultName string = ''
 
-@description('The key vault reference (if out-of-scope)')
+@description('A reference to the key vault resource')
 param keyVaultRef object = {}
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Variables

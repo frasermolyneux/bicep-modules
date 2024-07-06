@@ -4,7 +4,7 @@ targetScope = 'resourceGroup'
 @description('The sql server name')
 param sqlServerName string = ''
 
-@description('The sql server reference')
+@description('A reference to the sql server resource')
 param sqlServerRef object = {}
 
 @description('The database name')
@@ -19,10 +19,10 @@ param skuName string
 @description('The sku tier for the database')
 param skuTier string
 
-@description('The location to deploy the storage account in')
+@description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to be applied to the storage account')
+@description('The tags to apply to the resources')
 param tags object
 
 // Resource References

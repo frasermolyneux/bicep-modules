@@ -14,7 +14,7 @@ param cname string
 @description('The cname validation token for the record')
 param cnameValidationToken string
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Resource References

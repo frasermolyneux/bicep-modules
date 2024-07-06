@@ -1,19 +1,19 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The app insights name')
+@description('The app insights resource name')
 param appInsightsName string
 
 @description('The log analytics workspace name (if in-scope)')
 param logAnalyticsWorkspaceName string = ''
 
-@description('The log analytics workspace reference (if out-of-scope)')
+@description('A reference to the log analytics workspace resource')
 param logAnalyticsWorkspaceRef object = {}
 
-@description('The location of the resources.')
+@description('The location to deploy the resources')
 param location string = resourceGroup().location
 
-@description('The tags to apply to the resources.')
+@description('The tags to apply to the resources')
 param tags object
 
 // Resource References
