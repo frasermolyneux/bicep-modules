@@ -1,16 +1,23 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-param parKeyVaultName string
-param parPrincipalId string
+@description('The key vault name')
+param keyVaultName string = ''
 
-param parSecretsPermissions array = [
+@description('The key vault reference')
+param keyVaultRef object = {}
+
+@description('The principal id to grant access to the key vault')
+param principalId string
+
+@description('The permissions to grant to the key vault')
+param secretsPermissions array = [
   'get'
 ]
 
-// Existing In-Scope Resources
+// Resource References
 resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' existing = {
-  name: parKeyVaultName
+  name: keyVaultRef != {} ? keyVaultRef.name : keyVaultName
 }
 
 // Module Resources
@@ -21,11 +28,11 @@ resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-
   properties: {
     accessPolicies: [
       {
-        objectId: parPrincipalId
+        objectId: principalId
         permissions: {
           certificates: []
           keys: []
-          secrets: parSecretsPermissions
+          secrets: secretsPermissions
           storage: []
         }
         tenantId: tenant().tenantId
