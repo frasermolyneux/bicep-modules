@@ -1,11 +1,14 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The environment for the storage account')
-param environment string
+@description('The storage account name')
+param storageAccountName string = ''
 
-@description('The workload the storage account is for')
-param workload string
+@description('The environment for the storage account (must set if not providing storageAccountName)')
+param environment string = ''
+
+@description('The workload the storage account is for (must set if not providing storageAccountName)')
+param workload string = ''
 
 @description('The storage account sku for the storage account')
 param sku string = 'Standard_LRS'
@@ -18,7 +21,7 @@ param tags object
 
 // Module Resources
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: 'sa${uniqueString(resourceGroup().id, workload, environment)}'
+  name: !empty(storageAccountName) ? storageAccountName : 'sa${uniqueString(resourceGroup().id, workload, environment)}'
   location: location
   kind: 'StorageV2'
   tags: tags
