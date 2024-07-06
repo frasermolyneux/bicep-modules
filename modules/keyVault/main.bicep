@@ -1,34 +1,50 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-param parKeyVaultName string
-param parLocation string
-param parTags object
+@description('The storage account name')
+param keyVaultName string = ''
+
+@description('The environment for the storage account (must set if not providing keyVaultName)')
+param environment string = ''
+
+@description('The workload the storage account is for (must set if not providing keyVaultName)')
+param workload string = ''
 
 @description('Must be set to "default" if the Key Vault does not exist. Setting to "recover" avoids the accessPolicies being wiped each time.')
-param parKeyVaultCreateMode string = 'recover'
+param keyVaultCreateMode string = 'recover'
 
-param parEnabledForDeployment bool = false
-param parEnabledForTemplateDeployment bool = false
+@description('Enable the key vault for deployment')
+param enabledForDeployment bool = false
 
-param parEnabledForRbacAuthorization bool = false
+@description('Enable the key vault for template deployment')
+param enabledForTemplateDeployment bool = false
 
-param parSoftDeleteRetentionInDays int = 90
+@description('Enable the key vault for rbac authorization')
+param enabledForRbacAuthorization bool = true
+
+@description('Enable the key vault for deployment')
+param softDeleteRetentionInDays int = 90
+
+@description('The location to deploy the storage account in')
+param location string = resourceGroup().location
+
+@description('The tags to be applied to the storage account')
+param tags object
 
 // Module Resources
 resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
-  name: parKeyVaultName
-  location: parLocation
-  tags: parTags
+  name: !empty(keyVaultName) ? keyVaultName : 'kv${uniqueString(resourceGroup().id, workload, environment)}-${location}'
+  location: location
+  tags: tags
 
   properties: {
     accessPolicies: []
-    createMode: parKeyVaultCreateMode
+    createMode: keyVaultCreateMode
 
     enablePurgeProtection: true
-    enableRbacAuthorization: parEnabledForRbacAuthorization
-    enabledForDeployment: parEnabledForDeployment
-    enabledForTemplateDeployment: parEnabledForTemplateDeployment
+    enableRbacAuthorization: enabledForRbacAuthorization
+    enabledForDeployment: enabledForDeployment
+    enabledForTemplateDeployment: enabledForTemplateDeployment
 
     networkAcls: {
       bypass: 'AzureServices'
@@ -40,11 +56,16 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
       name: 'standard'
     }
 
-    softDeleteRetentionInDays: parSoftDeleteRetentionInDays
+    softDeleteRetentionInDays: softDeleteRetentionInDays
 
     tenantId: tenant().tenantId
   }
 }
 
 // Outputs
-output outKeyVaultName string = keyVault.name
+output keyVaultRef object = {
+  subscriptionId: subscription().subscriptionId
+  resourceGroupName: resourceGroup().name
+  name: keyVault.name
+  id: keyVault.id
+}
