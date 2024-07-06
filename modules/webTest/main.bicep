@@ -1,40 +1,43 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('The web app name')
-param parWebAppName string
-
-@description('The location of the resource group.')
-param parLocation string = resourceGroup().location
+@description('The workload name')
+param workloadName string
 
 @description('The test url path')
-param parTestUrl string
+param testUrl string
+
+@description('The app insights name')
+param appInsightsName string = ''
 
 @description('The app insights reference')
-param parAppInsightsRef object
+param appInsightsRef object = {}
 
-@description('The tags to apply to the resources.')
-param parTags object = resourceGroup().tags
+@description('The location to deploy the resources')
+param location string = resourceGroup().location
+
+@description('The tags to be applied to the storage account')
+param tags object
 
 // Existing Resources
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
-  name: parAppInsightsRef.Name
+  name: appInsightsRef != {} ? appInsightsRef.name : appInsightsName
 }
 
 // Module Resources
 resource availabilityTest 'microsoft.insights/webtests@2022-06-15' = {
-  name: '${parWebAppName}-availability-test'
-  location: parLocation
+  name: '${workloadName}-availability-test'
+  location: location
 
-  tags: union(parTags, {
+  tags: union(tags, {
     'hidden-link:${appInsights.id}': 'Resource'
   })
 
   kind: 'standard'
 
   properties: {
-    SyntheticMonitorId: '${parWebAppName}-availability-test'
-    Name: '${parWebAppName}-availability-test'
+    SyntheticMonitorId: '${workloadName}-availability-test'
+    Name: '${workloadName}-availability-test'
     Enabled: true
     Frequency: 300
     Timeout: 30
@@ -55,7 +58,7 @@ resource availabilityTest 'microsoft.insights/webtests@2022-06-15' = {
     ]
 
     Request: {
-      RequestUrl: parTestUrl
+      RequestUrl: testUrl
       HttpVerb: 'GET'
       ParseDependentRequests: true
       FollowRedirects: true
