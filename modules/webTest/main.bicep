@@ -39,7 +39,7 @@ resource availabilityTest 'microsoft.insights/webtests@2022-06-15' = {
     SyntheticMonitorId: '${workloadName}-availability-test'
     Name: '${workloadName}-availability-test'
     Enabled: true
-    Frequency: 300
+    Frequency: 900
     Timeout: 30
     Kind: 'standard'
 
@@ -48,9 +48,6 @@ resource availabilityTest 'microsoft.insights/webtests@2022-06-15' = {
     Locations: [
       {
         Id: 'emea-ru-msa-edge'
-      }
-      {
-        Id: 'emea-nl-ams-azr'
       }
       {
         Id: 'us-va-ash-azr'
@@ -65,7 +62,9 @@ resource availabilityTest 'microsoft.insights/webtests@2022-06-15' = {
     }
 
     ValidationRules: {
-      SSLCheck: false
+      ExpectedHttpStatusCode: 200
+      SSLCheck: true
+      SSLCertRemainingLifetimeCheck: 14
     }
   }
 }
