@@ -6,6 +6,7 @@ trigger:
     - 'docs/*'
 
 pr:
+  autoCancel: false
   branches:
     include:
     - '*'
