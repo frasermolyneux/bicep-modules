@@ -14,18 +14,16 @@ pr:
     - 'docs/*'
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
-steps:
-- task: MicrosoftSecurityDevOps@1
-  displayName: 'Microsoft Security DevOps'
-  #inputs:    
-  # command: 'run' | 'pre-job' | 'post-job'. Optional. The command to run. Default: run
-  # config: string. Optional. A file path to an MSDO configuration file ('*.gdnconfig').
-  # policy: 'azuredevops' | 'microsoft' | 'none'. Optional. The name of a well-known Microsoft policy. If no configuration file or list of tools is provided, the policy may instruct MSDO which tools to run. Default: azuredevops.
-  # categories: string. Optional. A comma-separated list of analyzer categories to run. Values: 'secrets', 'code', 'artifacts', 'IaC', 'containers. Example: 'IaC,secrets'. Defaults to all.
-  # languages: string. Optional. A comma-separated list of languages to analyze. Example: 'javascript,typescript'. Defaults to all.
-  # tools: string. Optional. A comma-separated list of analyzer tools to run. Values: 'bandit', 'binskim', 'eslint', 'templateanalyzer', 'terrascan', 'trivy'.
-  # break: boolean. Optional. If true, will fail this build step if any error level results are found. Default: false.
-  # publish: boolean. Optional. If true, will publish the output SARIF results file to the chosen pipeline artifact. Default: true.
-  # artifactName: string. Optional. The name of the pipeline artifact to publish the SARIF result file to. Default: CodeAnalysisLogs*.
+resources:
+  repositories:
+    - repository: ado-pipeline-templates
+      type: github
+      name: frasermolyneux/ado-pipeline-templates
+      endpoint: github.com_frasermolyneux
+
+stages:
+  - stage: build
+    jobs:
+      - template: jobs/devops-secure-scanning.yml@ado-pipeline-templates
