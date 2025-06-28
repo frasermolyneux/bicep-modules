@@ -7,8 +7,11 @@ param apiManagementName string
 @description('The workload name')
 param workloadName string
 
-@description('The api scope')
-param apiScope string
+@description('The api scope (deprecated - use scope parameter instead)')
+param apiScope string = ''
+
+@description('The scope in format like "/products/{productId}" or "/apis" or "/apis/{apiId}"')
+param scope string = ''
 
 @description('The key vault resource name')
 param keyVaultName string = ''
@@ -20,22 +23,30 @@ param keyVaultRef object = {}
 param tags object
 
 // Variables
-var subscriptionName = '${workloadName}-${apiScope}'
+// Determine the effective scope based on provided parameters
+// If 'scope' is provided, use it directly; otherwise construct from 'apiScope' (for backward compatibility)
+var effectiveScope = scope != '' ? scope : (apiScope != '' ? '/apis/${apiScope}' : '')
+
+// Extract a meaningful suffix for the subscription name from the scope
+// For product scopes like '/products/my-product', this will extract 'my-product'
+// For API scopes, it will use the apiScope value directly
+var subscriptionNameSuffix = scope != '' ? last(split(scope, '/')) : apiScope
+var subscriptionName = '${workloadName}-${subscriptionNameSuffix}'
 
 // Resource References
-resource apiManagement 'Microsoft.ApiManagement/service@2021-12-01-preview' existing = {
+resource apiManagement 'Microsoft.ApiManagement/service@2024-05-01' existing = {
   name: apiManagementName
 }
 
 // Module Resources
-resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscriptions@2021-08-01' = {
+resource apiManagementSubscription 'Microsoft.ApiManagement/service/subscriptions@2024-05-01' = {
   name: subscriptionName
   parent: apiManagement
 
   properties: {
     allowTracing: false
     displayName: subscriptionName
-    scope: '/apis/${apiScope}'
+    scope: effectiveScope
   }
 }
 
