@@ -1,17 +1,21 @@
 trigger:
   branches:
     include:
-    - '*'
-    exclude:
-    - 'docs/*'
+      - main
+
+schedules:
+  - cron: "0 2 * * 4"
+    displayName: "Weekly Security Scan (Thu 02:00 UTC)"
+    branches:
+      include:
+        - main
+    always: true
 
 pr:
-  autoCancel: false
+  autoCancel: true
   branches:
     include:
-    - '*'
-    exclude:
-    - 'docs/*'
+      - main
 
 pool:
   vmImage: ubuntu-latest

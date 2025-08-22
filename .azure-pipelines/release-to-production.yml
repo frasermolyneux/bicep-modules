@@ -1,17 +1,17 @@
 trigger:
   branches:
     include:
-    - '*'
-    exclude:
-    - 'docs/*'
+      - main
 
-pr:
-  autoCancel: false
-  branches:
-    include:
-    - '*'
-    exclude:
-    - 'docs/*'
+schedules:
+  - cron: "0 3 * * 4"
+    displayName: "Weekly Release (Thu 03:00 UTC)"
+    branches:
+      include:
+        - main
+    always: true
+
+pr: none
 
 pool:
   vmImage: 'windows-latest'
