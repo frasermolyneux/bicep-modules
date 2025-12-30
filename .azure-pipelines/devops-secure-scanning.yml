@@ -31,3 +31,5 @@ stages:
   - stage: build
     jobs:
       - template: jobs/devops-secure-scanning.yml@ado-pipeline-templates
+        parameters:
+          break: false
