@@ -20,7 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Checkout additional repo
+      - name: Checkout shared Copilot configuration
         uses: actions/checkout@v6
         with:
           repository: frasermolyneux/.github-copilot
+          path: .github-copilot
