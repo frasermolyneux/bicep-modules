@@ -19,7 +19,7 @@ This repository is a catalogue of reusable Azure Bicep modules published to Azur
 ## Build and Validation
 
 - **Local validation**: `az bicep build --file modules/<name>/main.bicep`
-- **GitHub Actions**: `build-and-test.yml` validates all modules on feature/bugfix/hotfix branches; `pr-verify.yml` validates on PRs to main; `codequality.yml` runs SonarCloud scanning, DevOps secure scanning, and dependency review.
+- **GitHub Actions**: `build-and-test.yml` validates all modules on feature/bugfix/hotfix branches; `pr-verify.yml` validates on all PRs; `codequality.yml` runs SonarCloud scanning, DevOps secure scanning, and dependency review.
 - **Azure DevOps**: `release-to-production.yml` lints and publishes modules to ACR via `spn-bicep-modules-production`.
 
 ## Versioning and Publishing
