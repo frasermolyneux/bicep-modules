@@ -16,13 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
-    
-    - name: Checkout additional repo
-      uses: actions/checkout@v6
-      with:
-        repository: frasermolyneux/.github-copilot
-        path: .github-copilot
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Checkout additional repo
+        uses: actions/checkout@v6
+        with:
+          repository: frasermolyneux/.github-copilot
