@@ -1,0 +1,34 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - "bugfix/**"
+      - "hotfix/**"
+
+permissions: {}
+
+jobs:
+  bicep-validation:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Azure CLI
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Validate Bicep modules
+      shell: bash
+      run: |
+        echo "Validating Bicep modules..."
+        for bicep_file in $(find modules -name "main.bicep"); do
+          echo "Validating $bicep_file"
+          az bicep build --file "$bicep_file"
+        done
